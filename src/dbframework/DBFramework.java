@@ -15,11 +15,15 @@ public class DBFramework {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        DB.getConnection();
-
-        DB.insert("Mata_diklat", new String[][]{{"Kode_mata_diklat", "01"}, {"Nama_mata_diklat", "Nama 1"}});
-        DB.update("Mata_diklat", new String[][]{{"Nama_mata_diklat", "Nama satu"}}, new String[][]{{"Kode_mata_diklat", "01"}});
-        DB.delete("Mata_diklat", new String[][]{{"Kode_mata_diklat", "01"}});
+        TestModel model = new TestModel();
+        model.set("Kode_mata_diklat", "01");
+        model.set("Nama_mata_diklat", "Mata Diklat 01");
+        model.insert();
+        
+//        model.set("Nama_mata_diklat", "Nama Mata Diklat 01");
+//        model.update();
+        
+//        model.delete();
     }
 
 }
