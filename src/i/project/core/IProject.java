@@ -8,6 +8,12 @@ package i.project.core;
 import i.project.config.Config;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,5 +31,51 @@ public class IProject {
             e.printStackTrace();
         }
         return conn;
+    }
+
+    public static void close(Connection conn) {
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(IProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void close(Connection conn, Statement statement) {
+        try {
+            conn.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(IProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void close(Connection conn, Statement statement, ResultSet result) {
+        try {
+            conn.close();
+            statement.close();
+            result.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(IProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void close(Connection conn, PreparedStatement statement) {
+        try {
+            conn.close();
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(IProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void close(Connection conn, PreparedStatement statement, ResultSet result) {
+        try {
+            conn.close();
+            statement.close();
+            result.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(IProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
