@@ -5,6 +5,9 @@
  */
 package dbframework;
 
+import i.project.core.Model;
+import java.util.List;
+
 /**
  *
  * @author auliayf
@@ -16,14 +19,16 @@ public class DBFramework {
      */
     public static void main(String[] args) {
         TestModel model = new TestModel();
-        model.set("Kode_mata_diklat", "01");
-        model.set("Nama_mata_diklat", "Mata Diklat 01");
-        model.insert();
         
-//        model.set("Nama_mata_diklat", "Nama Mata Diklat 01");
-//        model.update();
+//        model.set("Kode_mata_diklat", "01");
+//        model.set("Nama_mata_diklat", "Mata Diklat 01");
+//        
+//        model.insert();
         
-//        model.delete();
+        List<Model> models = model.get_where("Kode_mata_diklat", "03");
+        for (Model row : models) {
+            System.out.println(row.get(row.PRIMARY_KEY) + " | " + row.get("Nama_mata_diklat"));
+        }
     }
 
 }
