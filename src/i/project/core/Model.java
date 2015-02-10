@@ -34,6 +34,10 @@ public class Model {
     public static final String[] LIKE_BEFORE = {" LIKE '%", "'"};
     public static final String[] LIKE_AFTER = {" LIKE '", "%'"};
 
+    public static final String JOIN_EMPTY = " ";
+    public static final String JOIN_RIGHT = " RIGHT ";
+    public static final String JOIN_LEFT = " LEFT ";
+    
     public static final String OR = " OR ";
     public static final String COMMA = ", ";
     public static final String AND = " AND ";
@@ -188,7 +192,7 @@ public class Model {
             conn = IProject.getConn();
             statement = conn.createStatement();
             result = statement.executeQuery(
-                    "SELECT * FROM " + TABLE_NAME + param + " JOIN " 
+                    "SELECT * FROM " + TABLE_NAME + param + "JOIN " 
                             + bModel.TABLE_NAME + " ON " + bModel.TABLE_NAME + "." + bModel.PRIMARY_KEY 
                             + " = " + TABLE_NAME + "." + bModel.PRIMARY_KEY);
             meta = result.getMetaData();
