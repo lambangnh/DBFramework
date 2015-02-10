@@ -175,6 +175,47 @@ public class Model {
         }
         return models;
     }
+    
+    public List<Model> join(Model bModel, String param) {
+        List<Model> models = new ArrayList<>();
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet result = null;
+        ResultSetMetaData meta = null;
+        String columnName[];
+        int count = 0;
+        try {
+            conn = IProject.getConn();
+            statement = conn.createStatement();
+            result = statement.executeQuery(
+                    "SELECT * FROM " + TABLE_NAME + param + " JOIN " 
+                            + bModel.TABLE_NAME + " ON " + bModel.TABLE_NAME + "." + bModel.PRIMARY_KEY 
+                            + " = " + TABLE_NAME + "." + bModel.PRIMARY_KEY);
+            meta = result.getMetaData();
+            count = meta.getColumnCount();
+            columnName = new String[count];
+
+            for (int i = 1; i <= count; i++) {
+                columnName[i - 1] = meta.getColumnLabel(i);
+            }
+
+            while (result.next()) {
+                Model model = new Model();
+                model.TABLE_NAME = TABLE_NAME;
+                model.PRIMARY_KEY = PRIMARY_KEY;
+
+                for (String column : columnName) {
+                    model.set(column, result.getString(column));
+                }
+                models.add(model);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            IProject.close(conn, statement, result);
+        }
+        return models;
+    }
 
     /**
      * Insert
