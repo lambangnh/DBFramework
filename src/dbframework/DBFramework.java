@@ -5,6 +5,9 @@
  */
 package dbframework;
 
+import i.project.core.Model;
+import java.util.List;
+
 /**
  *
  * @author auliayf
@@ -16,6 +19,14 @@ public class DBFramework {
      */
     public static void main(String[] args) {
         System.out.println("Hello, world!");
+        
+        TestModel2 model = new TestModel2();
+        model.set("Kode_KK", "01");
+        model.set("Kode_mata_diklat", "01");
+        List<Model> models = model.join(new TestModel(), Model.JOIN_EMPTY);
+        for(Model m : models){
+            System.out.println(m.get("Kode_KK") + " | " + m.get("Nama_mata_diklat") + " | " + m.get("Nama_kompetensi_keahlian"));
+        }
     }
 
 }
