@@ -29,7 +29,7 @@ public class Model {
     public String PRIMARY_KEY = "";
 
     public static final String[] TAG = {" = " + '"', String.valueOf('"')};
-    
+
     public static final String[] LIKE_BOTH = {" LIKE '%", "%'"};
     public static final String[] LIKE_BEFORE = {" LIKE '%", "'"};
     public static final String[] LIKE_AFTER = {" LIKE '", "%'"};
@@ -138,6 +138,44 @@ public class Model {
         return models;
     }
 
+    public List<Model> like(String[] param) {
+        List<Model> models = new ArrayList<>();
+        Connection conn = null;
+        Statement statement = null;
+        ResultSet result = null;
+        ResultSetMetaData meta = null;
+        String columnName[];
+        int count = 0;
+        try {
+            conn = IProject.getConn();
+            statement = conn.createStatement();
+            result = statement.executeQuery(likeQuery(param));
+            meta = result.getMetaData();
+            count = meta.getColumnCount();
+            columnName = new String[count];
+
+            for (int i = 1; i <= count; i++) {
+                columnName[i - 1] = meta.getColumnLabel(i);
+            }
+
+            while (result.next()) {
+                Model model = new Model();
+                model.TABLE_NAME = TABLE_NAME;
+                model.PRIMARY_KEY = PRIMARY_KEY;
+
+                for (String column : columnName) {
+                    model.set(column, result.getString(column));
+                }
+                models.add(model);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            IProject.close(conn, statement, result);
+        }
+        return models;
+    }
+
     /**
      * Insert
      */
@@ -216,8 +254,19 @@ public class Model {
         String query = "UPDATE " + TABLE_NAME + " SET "
                 + Utils.implode_kv(mMap, COMMA, TAG)
                 + " WHERE " + PRIMARY_KEY + " = " + '"' + mMap.get(PRIMARY_KEY) + '"';
-                ;
+        ;
 
+        return query;
+    }
+    
+    /**
+     * Query builder for like
+     * @param param Tag
+     * @return      Like Query
+     */
+    private String likeQuery(String[] param) {
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE "
+                + Utils.implode_kv(mMap, OR, param);
         return query;
     }
 }
