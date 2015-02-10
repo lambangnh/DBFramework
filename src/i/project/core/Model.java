@@ -97,8 +97,11 @@ public class Model {
         try {
             conn = IProject.getConn();
             statement = conn.createStatement();
-            result = statement.executeQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + param
-                    + " " + '=' + " " + '"' + arg + '"');
+            String query = "SELECT * FROM " + TABLE_NAME;
+            if (arg.length() > 0) {
+                query += " WHERE " + param + " " + '=' + " " + '"' + arg + '"';
+            }
+            result = statement.executeQuery(query);
             meta = result.getMetaData();
             count = meta.getColumnCount();
             columnName = new String[count];
