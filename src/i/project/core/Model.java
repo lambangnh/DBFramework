@@ -28,6 +28,16 @@ public class Model {
     public String TABLE_NAME = "";
     public String PRIMARY_KEY = "";
 
+    public static final String[] TAG = {" = " + '"', String.valueOf('"')};
+    
+    public static final String[] LIKE_BOTH = {" LIKE '%", "%'"};
+    public static final String[] LIKE_BEFORE = {" LIKE '%", "'"};
+    public static final String[] LIKE_AFTER = {" LIKE '", "%'"};
+
+    public static final String OR = " OR ";
+    public static final String COMMA = ", ";
+    public static final String AND = " AND ";
+
     /**
      * Setter
      *
@@ -191,28 +201,9 @@ public class Model {
      * @return Insert Query
      */
     private String insertQuery() {
-        String query = "INSERT INTO " + TABLE_NAME + " (";
-
-        int i = 0;
-        for (Map.Entry<String, String> entry : mMap.entrySet()) {
-            query += entry.getKey();
-            if (i != (mMap.size() - 1)) {
-                query += ", ";
-            } else {
-                query += ") VALUES(";
-            }
-            i++;
-        }
-        i = 0;
-        for (Map.Entry<String, String> entry : mMap.entrySet()) {
-            query += '"' + entry.getValue() + '"';
-            if (i != (mMap.size() - 1)) {
-                query += ", ";
-            } else {
-                query += ")";
-            }
-            i++;
-        }
+        String query = "INSERT INTO " + TABLE_NAME
+                + " (" + Utils.implode_k(mMap, COMMA)
+                + ") VALUES (" + Utils.implode_v(mMap, COMMA, '"') + ")";
         return query;
     }
 
@@ -222,19 +213,11 @@ public class Model {
      * @return Update Query
      */
     private String updateQuery() {
-        String query = "UPDATE " + TABLE_NAME + " SET ";
+        String query = "UPDATE " + TABLE_NAME + " SET "
+                + Utils.implode_kv(mMap, COMMA, TAG)
+                + " WHERE " + PRIMARY_KEY + " = " + '"' + mMap.get(PRIMARY_KEY) + '"';
+                ;
 
-        int i = 0;
-        for (Map.Entry<String, String> entry : mMap.entrySet()) {
-            if (!entry.getKey().equals(PRIMARY_KEY)) {
-                query += entry.getKey() + " " + '=' + ' ' + '"' + entry.getValue() + '"';
-                if (i != (mMap.size() - 2)) {
-                    query += ", ";
-                }
-                i++;
-            }
-        }
-        query += " WHERE " + PRIMARY_KEY + " " + '=' + " " + '"' + mMap.get(PRIMARY_KEY) + '"';
         return query;
     }
 }
